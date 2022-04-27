@@ -592,6 +592,8 @@ func (db *DB) GetApproximateSizes(ranges []Range) []uint64 {
 	cLimits := make([]*C.char, len(ranges))
 	cStartLens := make([]C.size_t, len(ranges))
 	cLimitLens := make([]C.size_t, len(ranges))
+	cErrors := make([]*C.char, len(ranges))
+
 	for i, r := range ranges {
 		cStarts[i] = (*C.char)(C.CBytes(r.Start))
 		cStartLens[i] = C.size_t(len(r.Start))
@@ -613,7 +615,8 @@ func (db *DB) GetApproximateSizes(ranges []Range) []uint64 {
 		&cStartLens[0],
 		&cLimits[0],
 		&cLimitLens[0],
-		(*C.uint64_t)(&sizes[0]))
+		(*C.uint64_t)(&sizes[0]),
+		&cErrors[0])
 
 	return sizes
 }
@@ -633,6 +636,8 @@ func (db *DB) GetApproximateSizesCF(cf *ColumnFamilyHandle, ranges []Range) []ui
 	cLimits := make([]*C.char, len(ranges))
 	cStartLens := make([]C.size_t, len(ranges))
 	cLimitLens := make([]C.size_t, len(ranges))
+	cErrors := make([]*C.char, len(ranges))
+
 	for i, r := range ranges {
 		cStarts[i] = (*C.char)(C.CBytes(r.Start))
 		cStartLens[i] = C.size_t(len(r.Start))
@@ -655,7 +660,8 @@ func (db *DB) GetApproximateSizesCF(cf *ColumnFamilyHandle, ranges []Range) []ui
 		&cStartLens[0],
 		&cLimits[0],
 		&cLimitLens[0],
-		(*C.uint64_t)(&sizes[0]))
+		(*C.uint64_t)(&sizes[0]),
+		&cErrors[0])
 
 	return sizes
 }
